@@ -8,6 +8,14 @@ from django.utils.safestring import mark_safe
 from django.contrib.auth.admin import UserAdmin
 from django.contrib.auth.models import User
 
+class CommentInline(admin.TabularInline):
+    model = Comment
+
+class PostInline(admin.TabularInline):
+    model = Post
+
+class PhotoInline(admin.StackedInline):
+    model = Photo
 
 class ProfileInline(admin.StackedInline):
     model = Profile
@@ -25,14 +33,14 @@ class CustomUserAdmin(UserAdmin):
         return super(UserAdmin, self).change_view(*args, **kwargs)
 
 
-class CustomAdmin(admin.ModelAdmin):
-    # list_display = ('id','name','email','password_digest','token','json','avatar','created_at','updated_at','nationality','city','age','telenumber' )
-    # list_display = ('id','name','email','token','created_at','updated_at','nationality','city','age','telenumber','user' )
-    # list_display_links = ('first_name', 'last_name')
-    def __init__(self, model, admin_site):
-        self.list_display = [
-            field.name for field in model._meta.fields if field.name not in ('json','avatar','password_digest')]
-        super(CustomAdmin, self).__init__(model, admin_site)
+# class CustomAdmin(admin.ModelAdmin):
+#     # list_display = ('id','name','email','password_digest','token','json','avatar','created_at','updated_at','nationality','city','age','telenumber' )
+#     # list_display = ('id','name','email','token','created_at','updated_at','nationality','city','age','telenumber','user' )
+#     # list_display_links = ('first_name', 'last_name')
+#     def __init__(self, model, admin_site):
+#         self.list_display = [
+#             field.name for field in model._meta.fields if field.name not in ('json','avatar','password_digest')]
+#         super(CustomAdmin, self).__init__(model, admin_site)
 
 
 class ProfileAdmin(admin.ModelAdmin):
@@ -40,7 +48,7 @@ class ProfileAdmin(admin.ModelAdmin):
     list_display_links = ('id', 'email')
     # Add it to the details view:
     search_fields = ('=id','name', '=age')
-    # inlines = [ProfileUserInline]
+    inlines = [PostInline]
 
     def user_link(self, obj):
         return mark_safe('<a href="{}">{}</a>'.format(
@@ -61,7 +69,7 @@ class PostAdmin(admin.ModelAdmin):
     # list_select_related = ('profile',)
     # Add it to the details view:
     # read_only_fields = ('user_link',)
-    # inlines = [ProfileUserInline]
+    inlines = [CommentInline]
 
     def user_link(self, obj):
         return mark_safe('<a href="{}">{}</a>'.format(
@@ -75,7 +83,7 @@ class PhotoAdmin(admin.ModelAdmin):
     list_display_links = ('id', 'image')
     # Add it to the details view:
     search_fields = ('=id','profile__email','profile__name')
-    # inlines = [ProfileUserInline]
+    # inlines = [CommentInline]
 
     def user_link(self, obj):
         return mark_safe('<a href="{}">{}</a>'.format(

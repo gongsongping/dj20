@@ -19,10 +19,10 @@ from django.dispatch import receiver
 class Profile(models.Model):
     name = models.CharField(max_length=30, blank=True)
     email = models.CharField(max_length=30, blank=True)
-    password_digest = models.CharField(max_length=30, blank=True)
+    password_digest = models.CharField(max_length=300, blank=True)
     token = models.CharField(max_length=30, blank=True)
     json = models.CharField(max_length=30, blank=True)
-    avatar = models.CharField(max_length=30, blank=True)
+    avatar = models.CharField(max_length=300, blank=True)
     created_at = models.DateTimeField(auto_now_add=True,null=True, blank=True)
     updated_at = models.DateTimeField(auto_now=True,null=True, blank=True)
     nationality = models.CharField(max_length=30, blank=True)
@@ -65,13 +65,13 @@ class Profile(models.Model):
 
 
 class Post(models.Model):
-    content = models.TextField(max_length=200)
+    content = models.TextField(max_length=500)
     hidden = models.BooleanField(default=False)
     json = models.CharField(max_length=30, blank=True)    
-    profile = models.ForeignKey(Profile, on_delete=models.CASCADE)
+    profile = models.ForeignKey(Profile, on_delete=models.CASCADE, related_name='posts', blank=True, null=False)
     created_at = models.DateTimeField(auto_now_add=True,null=True, blank=True)
     updated_at = models.DateTimeField(auto_now=True,null=True, blank=True)
-    url = models.CharField(max_length=200, null=True, blank=True)  # new1
+    url = models.CharField(max_length=200,null=True, blank=True)  # new1
 
     class Meta:
         db_table = 'posts'
@@ -79,7 +79,7 @@ class Post(models.Model):
 
 class Photo(models.Model):
     url = models.CharField(max_length=200, null=True, blank=True)  # new1
-    profile = models.ForeignKey(Profile, on_delete=models.CASCADE)
+    profile = models.ForeignKey(Profile, on_delete=models.CASCADE,related_name='photos', blank=True, null=False)
     created_at = models.DateTimeField(auto_now_add=True,null=True, blank=True)
     updated_at = models.DateTimeField(auto_now=True,null=True, blank=True)
 
@@ -89,8 +89,8 @@ class Photo(models.Model):
 
 class Comment(models.Model):
     content = models.CharField(max_length=200)
-    post = models.ForeignKey(Post, on_delete=models.CASCADE)    
-    profile = models.ForeignKey(Profile, on_delete=models.CASCADE)    
+    post = models.ForeignKey(Post, on_delete=models.CASCADE, related_name='comments', blank=True, null=False)    
+    profile = models.ForeignKey(Profile, on_delete=models.CASCADE, related_name='comments', blank=True, null=False)    
     created_at = models.DateTimeField(auto_now_add=True,null=True, blank=True)
     updated_at = models.DateTimeField(auto_now=True,null=True, blank=True)
    
