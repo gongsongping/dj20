@@ -9,19 +9,19 @@ from django.contrib.auth.admin import UserAdmin
 from django.contrib.auth.models import User
 
 
-class UserProfileInline(admin.StackedInline):
+class ProfileInline(admin.StackedInline):
     model = Profile
     max_num = 1
     can_delete = False
 
 class CustomUserAdmin(UserAdmin):
-    # inlines = [UserProfileInline]
+    # inlines = [ProfileInline]
     def add_view(self, *args, **kwargs):
         self.inlines = []
         return super(UserAdmin, self).add_view(*args, **kwargs)
 
     def change_view(self, *args, **kwargs):
-        self.inlines = [UserProfileInline]
+        self.inlines = [ProfileInline]
         return super(UserAdmin, self).change_view(*args, **kwargs)
 
 
@@ -39,7 +39,7 @@ class ProfileAdmin(admin.ModelAdmin):
     list_display = ('id','avatar_img','name','email','token','created_at','updated_at','nationality','city','age','telenumber', 'user_link' )
     list_display_links = ('id', 'email')
     # Add it to the details view:
-    read_only_fields = ('user_link',)
+    search_fields = ('=id','name', '=age')
     # inlines = [ProfileUserInline]
 
     def user_link(self, obj):
@@ -55,7 +55,10 @@ class ProfileAdmin(admin.ModelAdmin):
 
 class PostAdmin(admin.ModelAdmin):
     list_display = ('id','content', 'url','user_link' )
-    list_display_links = ('id', 'content')
+    list_display_links = ('id', 'content',)
+    search_fields = ('=id','content','profile__email','profile__name')
+    
+    # list_select_related = ('profile',)
     # Add it to the details view:
     # read_only_fields = ('user_link',)
     # inlines = [ProfileUserInline]
@@ -71,7 +74,7 @@ class PhotoAdmin(admin.ModelAdmin):
     list_display = ('id','url','image','user_link' )
     list_display_links = ('id', 'image')
     # Add it to the details view:
-    read_only_fields = ('user_link',)
+    search_fields = ('=id','profile__email','profile__name')
     # inlines = [ProfileUserInline]
 
     def user_link(self, obj):
@@ -89,7 +92,7 @@ class CommentAdmin(admin.ModelAdmin):
     list_display =  ('id','content','user_link','post_link')
     # list_display_links = ('first_name', 'last_name')
     # Add it to the details view:
-    read_only_fields = ('user_link','post_link')
+    search_fields = ('content','post__content','profile__email','profile__name')
     # inlines = [ProfileUserInline]
 
     def user_link(self, obj):
