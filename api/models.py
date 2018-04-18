@@ -68,7 +68,7 @@ class Post(models.Model):
     content = models.TextField(max_length=200)
     hidden = models.BooleanField(default=False)
     json = models.CharField(max_length=30, blank=True)    
-    user = models.ForeignKey(User, on_delete=models.CASCADE)
+    profile = models.ForeignKey(Profile, on_delete=models.CASCADE)
     created_at = models.DateTimeField(auto_now_add=True,null=True, blank=True)
     updated_at = models.DateTimeField(auto_now=True,null=True, blank=True)
     url = models.CharField(max_length=200, null=True, blank=True)  # new1
@@ -79,7 +79,7 @@ class Post(models.Model):
 
 class Photo(models.Model):
     url = models.CharField(max_length=200, null=True, blank=True)  # new1
-    user = models.ForeignKey(User, on_delete=models.CASCADE)
+    profile = models.ForeignKey(Profile, on_delete=models.CASCADE)
     created_at = models.DateTimeField(auto_now_add=True,null=True, blank=True)
     updated_at = models.DateTimeField(auto_now=True,null=True, blank=True)
 
@@ -90,7 +90,7 @@ class Photo(models.Model):
 class Comment(models.Model):
     content = models.CharField(max_length=200)
     post = models.ForeignKey(Post, on_delete=models.CASCADE)    
-    user = models.ForeignKey(User, on_delete=models.CASCADE)    
+    profile = models.ForeignKey(Profile, on_delete=models.CASCADE)    
     created_at = models.DateTimeField(auto_now_add=True,null=True, blank=True)
     updated_at = models.DateTimeField(auto_now=True,null=True, blank=True)
    
