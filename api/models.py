@@ -14,6 +14,7 @@ from django.contrib.auth.models import User
 from django.db.models.signals import post_save
 from django.dispatch import receiver
 
+# INSERT INTO tab1( id,name,email,password_digest,token,json,avatar,created_at,updated_at,nationality,city,age,telenumber ) SELECT field1,field2,field3,field4,field5,field6,field7,field8,field9,field10,field11,field12,field13,field14,field15,field16  FROM  users
 
 class Profile(models.Model):
     name = models.CharField(max_length=30, blank=True)
@@ -40,14 +41,14 @@ class Profile(models.Model):
             models.Index(fields=['email', 'token']),
         ]
 
-    @receiver(post_save, sender=User)
-    def create_user_profile(sender, instance, created, **kwargs):
-        if created:
-            Profile.objects.create(user=instance)
+    # @receiver(post_save, sender=User)
+    # def create_user_profile(sender, instance, created, **kwargs):
+    #     if created:
+    #         Profile.objects.create(user=instance)
 
-    @receiver(post_save, sender=User)
-    def save_user_profile(sender, instance, **kwargs):
-        instance.profile.save()
+    # @receiver(post_save, sender=User)
+    # def save_user_profile(sender, instance, **kwargs):
+    #     instance.profile.save()
 
     def get_dict(self):
         return {'id': self.id,
