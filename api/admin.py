@@ -28,7 +28,7 @@ class From_tos(admin.TabularInline):
     fk_name = "from_profile"
 
 #等同于给用户加粉丝
-# class To-froms(admin.TabularInline):
+# class Froms_to(admin.TabularInline):
 #     model = Friendship
 #     fk_name = "to_profile"
 
