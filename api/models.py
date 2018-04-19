@@ -98,6 +98,12 @@ class Comment(models.Model):
         db_table = 'comments'
 
 
+class Friendship(models.Model):
+    to_profile = models.ForeignKey(Profile, on_delete=models.CASCADE, related_name="friends")
+    from_profile = models.ForeignKey(Profile, on_delete=models.CASCADE, related_name="from_friends")
+    class Meta:
+        db_table = 'friendships'
+
 
 
 # class Person(User):

@@ -22,6 +22,14 @@ class ProfileInline(admin.StackedInline):
     max_num = 1
     can_delete = False
 
+class MyIconsInline(admin.TabularInline):
+    model = Friendship
+    fk_name = "to_profile"
+
+class MyFansInline(admin.TabularInline):
+    model = Friendship
+    fk_name = "from_profile"
+
 class CustomUserAdmin(UserAdmin):
     # inlines = [ProfileInline]
     def add_view(self, *args, **kwargs):
@@ -46,9 +54,11 @@ class CustomUserAdmin(UserAdmin):
 class ProfileAdmin(admin.ModelAdmin):
     list_display = ('id','avatar_img','name','email','token','created_at','updated_at','nationality','city','age','telenumber', 'user_link' )
     list_display_links = ('id', 'email')
-    # Add it to the details view:
     search_fields = ('=id','name', '=age')
-    inlines = [PostInline]
+    # Add it to the details view:
+    exclude = ('password_digest',)
+    readonly_fields = ('json','token','user')    
+    inlines = [PostInline, MyIconsInline]
 
     def user_link(self, obj):
         return mark_safe('<a href="{}">{}</a>'.format(
@@ -61,6 +71,7 @@ class ProfileAdmin(admin.ModelAdmin):
         return mark_safe('<img width="50" height="50" src="{}" />'.format(obj.avatar))
     avatar_img.short_description = 'avatar'
 
+
 class PostAdmin(admin.ModelAdmin):
     list_display = ('id','content', 'url','user_link' )
     list_display_links = ('id', 'content',)
@@ -68,7 +79,7 @@ class PostAdmin(admin.ModelAdmin):
     
     # list_select_related = ('profile',)
     # Add it to the details view:
-    # read_only_fields = ('user_link',)
+    # readonly_fields = ('user_link',)
     inlines = [CommentInline]
 
     def user_link(self, obj):
@@ -115,8 +126,28 @@ class CommentAdmin(admin.ModelAdmin):
             reverse("admin:api_post_change", args=(obj.post.pk,)),
             obj.post.content
         ))
-    user_link.short_description = 'post'
+    post_link.short_description = 'post'
 
+class FriendshipAdmin(admin.ModelAdmin):
+    list_display =  ('id','from_profile','from_link' ,'to_profile','to_link')
+    # list_display_links = ('first_name', 'last_name')
+    # Add it to the details view:
+    search_fields = ('from_profile__id','from_profile__name','from_profile__email','to_profile__id','to_profile__name','to_profile__email')
+    # inlines = [ProfileUserInline]
+
+    def from_link(self, obj):
+        return mark_safe('<a href="{}">{}</a>'.format(
+            reverse("admin:api_profile_change", args=(obj.from_profile.pk,)),
+            obj.from_profile.name
+        ))
+    from_link.short_description = 'from_profile'
+
+    def to_link(self, obj):
+        return mark_safe('<a href="{}">{}</a>'.format(
+            reverse("admin:api_profile_change", args=(obj.to_profile.pk,)),
+            obj.to_profile.name
+        ))
+    to_link.short_description = 'to_profile'
 
 
 admin.site.unregister(User)
@@ -125,3 +156,4 @@ admin.site.register(Profile, ProfileAdmin)
 admin.site.register(Post, PostAdmin)
 admin.site.register(Photo, PhotoAdmin)
 admin.site.register(Comment, CommentAdmin)
+admin.site.register(Friendship, FriendshipAdmin)
