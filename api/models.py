@@ -119,40 +119,15 @@ class Comment(models.Model):
         db_table = 'comments'
 
 
-class Friendship(models.Model):
+class Relation(models.Model):
     from_profile = models.ForeignKey(Profile, on_delete=models.CASCADE, related_name="from_tos")#以from_profile_id 为外键
     to_profile = models.ForeignKey(Profile, on_delete=models.CASCADE, related_name="froms_to")#以to_profile_id 为外键
     class Meta:
-        db_table = 'friendships'
+        db_table = 'relations'
 
 
 
-# class Person(User):
-#     # objects = PersonManager()
-#     # created_at = models.DateTimeField(auto_now_add=True,null=True, blank=True)
-#     # updated_at = models.DateTimeField(auto_now=True,null=True, blank=True)
-#     # avatar = models.CharField(max_length=30, blank=True)
-#     # nationality = models.CharField(max_length=30, blank=True)
-#     # city = models.CharField(max_length=30, blank=True)
-#     # age = models.CharField(max_length=30, blank=True)
-#     # telenumber = models.CharField(max_length=30, blank=True)
-#     # description = models.CharField(max_length=30, blank=True)
-#     class Meta:
-#         proxy = True
-#         ordering = ('first_name', )
 
-#     def get_dict(self):
-#         return {'id': self.id,
-#                 'is_superuser': self.is_superuser,
-#                 'first_name': self.first_name,
-#                 'last_name': self.last_name,
-#                 'email': self.email,
-#                 'is_active': self.is_active,
-#                 'is_staff': self.is_staff,
-#                 'username': self.username,
-#                 'date_joined': self.date_joined,
-#                 'last_login': self.last_login,
-#                 'token': self.profile.token}
 
 
 # class PermissionsMixin(models.Model):

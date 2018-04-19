@@ -24,7 +24,7 @@ class ProfileInline(admin.StackedInline):
 
 #等同于给用户加关注着
 class From_tos(admin.TabularInline):
-    model = Friendship
+    model = Relation
     fk_name = "from_profile"
 
 #等同于给用户加粉丝
@@ -143,8 +143,8 @@ class CommentAdmin(admin.ModelAdmin):
         ))
     post_link.short_description = 'post'
 
-class FriendshipAdmin(admin.ModelAdmin):
-    list_display =  ('id','from_profile','from_link' ,'to_profile','to_link')
+class RelationAdmin(admin.ModelAdmin):
+    list_display =  ('id','from_link' ,'to_link')
     # list_display_links = ('first_name', 'last_name')
     # Add it to the details view:
     search_fields = ('from_profile__id','from_profile__name','from_profile__email','to_profile__id','to_profile__name','to_profile__email')
@@ -171,4 +171,4 @@ admin.site.register(Profile, ProfileAdmin)
 admin.site.register(Post, PostAdmin)
 admin.site.register(Photo, PhotoAdmin)
 admin.site.register(Comment, CommentAdmin)
-admin.site.register(Friendship, FriendshipAdmin)
+admin.site.register(Relation, RelationAdmin)
