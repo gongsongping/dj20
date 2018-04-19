@@ -22,16 +22,18 @@ class ProfileInline(admin.StackedInline):
     max_num = 1
     can_delete = False
 
-class MyIconsInline(admin.TabularInline):
-    model = Friendship
-    fk_name = "to_profile"
-
-class MyFansInline(admin.TabularInline):
+#等同于给用户加关注着
+class From_tos(admin.TabularInline):
     model = Friendship
     fk_name = "from_profile"
 
+#等同于给用户加粉丝
+# class To-froms(admin.TabularInline):
+#     model = Friendship
+#     fk_name = "to_profile"
+
 class CustomUserAdmin(UserAdmin):
-    # inlines = [ProfileInline]
+    # UserAdmin.inlines = [ProfileInline]
     UserAdmin.list_display+=('id','profile_link')
     def profile_link(self, obj):
         return mark_safe('<a href="{}">{}</a>'.format(
@@ -66,7 +68,7 @@ class ProfileAdmin(admin.ModelAdmin):
     # Add it to the details view:
     exclude = ('password_digest',)
     readonly_fields = ('json','token',)  #user  
-    inlines = [PostInline, ] #MyIconsInline
+    inlines = [PostInline,  From_tos]
 
     def user_link(self, obj):
         return mark_safe('<a href="{}">{}</a>'.format(
@@ -151,14 +153,14 @@ class FriendshipAdmin(admin.ModelAdmin):
     def from_link(self, obj):
         return mark_safe('<a href="{}">{}</a>'.format(
             reverse("admin:api_profile_change", args=(obj.from_profile.pk,)),
-            obj.from_profile.name
+            str(obj.from_profile.id)+',  '+obj.from_profile.name+',  '+obj.from_profile.email
         ))
     from_link.short_description = 'from_profile'
 
     def to_link(self, obj):
         return mark_safe('<a href="{}">{}</a>'.format(
             reverse("admin:api_profile_change", args=(obj.to_profile.pk,)),
-            obj.to_profile.name
+            str(obj.to_profile.id)+',  '+obj.to_profile.name+',  '+obj.to_profile.email
         ))
     to_link.short_description = 'to_profile'
 
