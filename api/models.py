@@ -11,7 +11,7 @@ from django.utils import timezone
 # from datetime import datetime, timedelta
 import datetime
 from django.contrib.auth.models import User
-from django.db.models.signals import post_save
+from django.db.models.signals import post_save, post_delete
 from django.dispatch import receiver
 
 # INSERT INTO tab1( id,name,email,password_digest,token,json,avatar,created_at,updated_at,nationality,city,age,telenumber ) SELECT field1,field2,field3,field4,field5,field6,field7,field8,field9,field10,field11,field12,field13,field14,field15,field16  FROM  users
@@ -40,15 +40,36 @@ class Profile(models.Model):
         indexes = [
             models.Index(fields=['email', 'token']),
         ]
-
-    # @receiver(post_save, sender=User)
-    # def create_user_profile(sender, instance, created, **kwargs):
+    #when use created
+    @receiver(post_save, sender=User)
+    def create_user_then_create_profile(sender, instance, created, **kwargs):
+        if created:
+            # Profile.objects.create(user=instance)
+            Profile.objects.create(user=instance,name=instance.username,password_digest=instance.password,email=instance.email)
+    #when use updated
+    @receiver(post_save, sender=User)
+    def update_user_then_update_profile(sender, instance, **kwargs):
+        instance.profile.email = instance.email
+        instance.profile.save() #insert and update both use save() insert 和 update 共用save()
+    #when profile created
+    # @receiver(post_save, sender=Profile)
+    # def create_profile_then_create_user(sender, instance, created, **kwargs):
     #     if created:
-    #         Profile.objects.create(user=instance)
+    #         # Profile.objects.create(user=instance)
+    #         User.objects.create(username=instance.username,password=instance.password_digest,email=instance.email)
+    #when profile updated
+    # @receiver(post_save, sender=Profile)
+    # def update_profile_then_update_user(sender, instance, **kwargs):
+    #     instance.user.email = instance.email
+    #     instance.user.save() #insert and update both use save() insert 和 update 共用save()
+    
+    # @receiver(post_delete, sender=self)
+    # def delete_profile_then_delete_user(sender, instance, **kwargs):
+    #     instance.user.delete()
 
-    # @receiver(post_save, sender=User)
-    # def save_user_profile(sender, instance, **kwargs):
-    #     instance.profile.save()
+    def delete(self):
+        super(Profile, self).delete()
+        self.user.delete()
 
     def get_dict(self):
         return {'id': self.id,

@@ -32,6 +32,14 @@ class MyFansInline(admin.TabularInline):
 
 class CustomUserAdmin(UserAdmin):
     # inlines = [ProfileInline]
+    UserAdmin.list_display+=('id','profile_link')
+    def profile_link(self, obj):
+        return mark_safe('<a href="{}">{}</a>'.format(
+            reverse("admin:api_profile_change", args=(obj.profile.pk,)),
+            str(obj.profile.pk)+', '+obj.profile.name+', '+ obj.profile.email
+        ))
+    profile_link.short_description = 'profile'
+
     def add_view(self, *args, **kwargs):
         self.inlines = []
         return super(UserAdmin, self).add_view(*args, **kwargs)
@@ -57,13 +65,13 @@ class ProfileAdmin(admin.ModelAdmin):
     search_fields = ('=id','name', '=age')
     # Add it to the details view:
     exclude = ('password_digest',)
-    readonly_fields = ('json','token','user')    
-    inlines = [PostInline, MyIconsInline]
+    readonly_fields = ('json','token',)  #user  
+    inlines = [PostInline, ] #MyIconsInline
 
     def user_link(self, obj):
         return mark_safe('<a href="{}">{}</a>'.format(
             reverse("admin:auth_user_change", args=(obj.user.pk,)),
-            obj.user.username
+            str(obj.user.pk)+', '+obj.user.username+', '+ obj.user.email
         ))
     user_link.short_description = 'user'
 
@@ -73,7 +81,7 @@ class ProfileAdmin(admin.ModelAdmin):
 
 
 class PostAdmin(admin.ModelAdmin):
-    list_display = ('id','content', 'url','user_link' )
+    list_display = ('id','content', 'url','user_link', 'comments')
     list_display_links = ('id', 'content',)
     search_fields = ('=id','content','profile__email','profile__name')
     
@@ -88,6 +96,11 @@ class PostAdmin(admin.ModelAdmin):
             obj.profile.name
         ))
     user_link.short_description = 'user'
+
+    def comments(self, obj):
+        import json
+        cmts = [c.content for c in obj.comments.all()]
+        return json.dumps(cmts)
 
 class PhotoAdmin(admin.ModelAdmin):
     list_display = ('id','url','image','user_link' )
@@ -104,7 +117,7 @@ class PhotoAdmin(admin.ModelAdmin):
     user_link.short_description = 'user'
 
     def image(self, obj):
-        return mark_safe('<img width="100" height="100" src="{}" />'.format(obj.url))
+        return mark_safe('<img width="100" height="100" src="{}" />'.format(obj.url))+ mark_safe('<img width="100" height="100" src="{}" />'.format(obj.url))
     image.short_description = 'image'
 
 class CommentAdmin(admin.ModelAdmin):
