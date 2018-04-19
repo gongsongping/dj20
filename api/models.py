@@ -114,14 +114,33 @@ class Comment(models.Model):
     profile = models.ForeignKey(Profile, on_delete=models.CASCADE, related_name='comments', blank=True, null=False)    
     created_at = models.DateTimeField(auto_now_add=True,null=True, blank=True)
     updated_at = models.DateTimeField(auto_now=True,null=True, blank=True)
-   
+
     class Meta:
         db_table = 'comments'
 
+class Tag(models.Model):
+    name = models.CharField(max_length=200, null=True, blank=True) 
+    created_at = models.DateTimeField(auto_now_add=True,null=True, blank=True)
+    updated_at = models.DateTimeField(auto_now=True,null=True, blank=True)       
+
+    class Meta:
+        db_table = 'tags'
+
 
 class Relation(models.Model):
-    from_profile = models.ForeignKey(Profile, on_delete=models.CASCADE, related_name="from_tos")#以from_profile_id 为外键
-    to_profile = models.ForeignKey(Profile, on_delete=models.CASCADE, related_name="froms_to")#以to_profile_id 为外键
+    created_at = models.DateTimeField(auto_now_add=True,null=True, blank=True)
+    updated_at = models.DateTimeField(auto_now=True,null=True, blank=True)       
+    #user friendship
+    from_profile = models.ForeignKey(Profile, on_delete=models.CASCADE, related_name="from_tos",  default=0)#以from_profile_id 为外键
+    to_profile = models.ForeignKey(Profile, on_delete=models.CASCADE, related_name="froms_to",  default=0)#以to_profile_id 为外键
+    #tag-post relation
+    tagpost_post = models.ForeignKey(Post, on_delete=models.CASCADE, related_name="tagpost_tags", default=0)
+    tagpost_tag = models.ForeignKey(Tag, on_delete=models.CASCADE, related_name="tagpost_posts", default=0)
+    #tag-profile relation
+    tagprofile_profile = models.ForeignKey(Profile, on_delete=models.CASCADE, related_name="tagprofile_tags", default=0)
+    tagprofile_tag = models.ForeignKey(Tag, on_delete=models.CASCADE, related_name="tagprofile_profiles", default=0)
+
+
     class Meta:
         db_table = 'relations'
 

@@ -51,16 +51,6 @@ class CustomUserAdmin(UserAdmin):
         return super(UserAdmin, self).change_view(*args, **kwargs)
 
 
-# class CustomAdmin(admin.ModelAdmin):
-#     # list_display = ('id','name','email','password_digest','token','json','avatar','created_at','updated_at','nationality','city','age','telenumber' )
-#     # list_display = ('id','name','email','token','created_at','updated_at','nationality','city','age','telenumber','user' )
-#     # list_display_links = ('first_name', 'last_name')
-#     def __init__(self, model, admin_site):
-#         self.list_display = [
-#             field.name for field in model._meta.fields if field.name not in ('json','avatar','password_digest')]
-#         super(CustomAdmin, self).__init__(model, admin_site)
-
-
 class ProfileAdmin(admin.ModelAdmin):
     list_display = ('id','avatar_img','name','email','token','created_at','updated_at','nationality','city','age','telenumber', 'user_link' )
     list_display_links = ('id', 'email')
@@ -144,7 +134,7 @@ class CommentAdmin(admin.ModelAdmin):
     post_link.short_description = 'post'
 
 class RelationAdmin(admin.ModelAdmin):
-    list_display =  ('id','from_link' ,'to_link')
+    list_display =  ('id','from_link' ,'to_link')+('tagpost_post_link','tagpost_tag_link','tagprofile_profile_link','tagprofile_tag_link')#
     # list_display_links = ('first_name', 'last_name')
     # Add it to the details view:
     search_fields = ('from_profile__id','from_profile__name','from_profile__email','to_profile__id','to_profile__name','to_profile__email')
@@ -164,6 +154,38 @@ class RelationAdmin(admin.ModelAdmin):
         ))
     to_link.short_description = 'to_profile'
 
+    def tagpost_post_link(self, obj):
+        return mark_safe('<a href="{}">{}</a>'.format(
+            reverse("admin:api_post_change", args=(obj.tagpost_post.pk,)),
+            str(obj.tagpost_post.id)+',  '+obj.tagpost_post.content
+        ))
+    tagpost_post_link.short_description = 'tagpost_post'
+
+    def tagpost_tag_link(self, obj):
+        return mark_safe('<a href="{}">{}</a>'.format(
+            reverse("admin:api_tag_change", args=(obj.tagpost_tag.pk,)),
+            str(obj.tagpost_tag.id)+',  '+obj.tagpost_tag.name
+        ))
+    tagpost_tag_link.short_description = 'tagpost_tag'
+
+    def tagprofile_profile_link(self, obj):
+        return mark_safe('<a href="{}">{}</a>'.format(
+            reverse("admin:api_profile_change", args=(obj.tagprofile_profile.pk,)),
+            str(obj.tagprofile_profile.id)+',  '+obj.tagprofile_profile.name+',  '+obj.tagprofile_profile.email
+        ))
+    tagprofile_profile_link.short_description = 'tagprofile_profile'
+
+    def  tagprofile_tag_link(self, obj):
+            return mark_safe('<a href="{}">{}</a>'.format(
+            reverse("admin:api_tag_change", args=(obj.tagprofile_tag.pk,)),
+            str(obj.tagprofile_tag.id)+',  '+obj.tagprofile_tag.name
+        ))
+    tagprofile_tag_link.short_description = 'tagprofile_tag'
+
+class TagAdmin(admin.ModelAdmin):
+    list_display =  ('id','name')
+    # inlines=[]
+
 
 admin.site.unregister(User)
 admin.site.register(User, CustomUserAdmin)
@@ -172,3 +194,4 @@ admin.site.register(Post, PostAdmin)
 admin.site.register(Photo, PhotoAdmin)
 admin.site.register(Comment, CommentAdmin)
 admin.site.register(Relation, RelationAdmin)
+admin.site.register(Tag, TagAdmin)
