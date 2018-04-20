@@ -77,10 +77,27 @@ WSGI_APPLICATION = 'dj20.wsgi.application'
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.sqlite3',
-        'NAME': os.path.join(BASE_DIR, 'dj20.sqlite3'),
+        'NAME': os.path.join(BASE_DIR, 'db/dj20.sqlite3'),
+        'TEST': {
+            'NAME': os.path.join(BASE_DIR,'db/dj20_test.sqlite3'),
+        },
     }
 }
 
+# import sys
+# if 'test' in sys.argv:
+#     DATABASES['default'] = {
+#         'ENGINE': 'django.db.backends.sqlite3',
+#         'TEST_CHARSET': 'UTF8', # if your normal db is utf8
+#         'NAME': ':memory:', # in memory
+#         'TEST_NAME': ':memory:', # in memory
+#     }
+
+#     DEBUG = False # might accelerate a bit
+#     TEMPLATE_DEBUG = False
+
+#     from django.core.management import call_command
+#     call_command('syncdb', migrate=True) # tables don't get created automatically for me
 
 # Password validation
 # https://docs.djangoproject.com/en/2.0/ref/settings/#auth-password-validators
@@ -103,6 +120,7 @@ AUTH_PASSWORD_VALIDATORS = [
 
 # Internationalization
 # https://docs.djangoproject.com/en/2.0/topics/i18n/
+# https://docs.djangoproject.com/en/2.0/ref/settings/#test
 
 LANGUAGE_CODE = 'en-us'
 
