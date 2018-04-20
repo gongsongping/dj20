@@ -62,7 +62,6 @@ class Profile(models.Model):
     # def update_profile_then_update_user(sender, instance, **kwargs):
     #     instance.user.email = instance.email
     #     instance.user.save() #insert and update both use save() insert 和 update 共用save()
-    
     # @receiver(post_delete, sender=self)
     # def delete_profile_then_delete_user(sender, instance, **kwargs):
     #     instance.user.delete()

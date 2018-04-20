@@ -37,10 +37,7 @@ class From_tos(admin.TabularInline):
 # class Froms_to(admin.TabularInline):
 #     model = Friendship
 #     fk_name = "to_profile"
-# tagpost_tags
-# tagpost_posts
-# tagprofile_tags
-# tagprofile_profiles
+
 class Tagpost_tags(admin.TabularInline):
     model = Relation
     fk_name = "tagpost_post"
