@@ -14,10 +14,10 @@ class CommentInline(admin.TabularInline):
 class PostInline(admin.TabularInline):
     model = Post
 
-class PhotoInline(admin.StackedInline):
+class PhotoInline(admin.TabularInline):
     model = Photo
 
-class ProfileInline(admin.StackedInline):
+class ProfileInline(admin.TabularInline):
     model = Profile
     max_num = 1
     can_delete = False
@@ -26,11 +26,41 @@ class ProfileInline(admin.StackedInline):
 class From_tos(admin.TabularInline):
     model = Relation
     fk_name = "from_profile"
+    fields = ['from_profile','to_profile']
+    def formfield_for_foreignkey(self, db_field, request, **kwargs):
+        kwargs['initial'] = None
+        return super(From_tos,self).formfield_for_foreignkey(
+            db_field, request, **kwargs
+        )
 
 #等同于给用户加粉丝
 # class Froms_to(admin.TabularInline):
 #     model = Friendship
 #     fk_name = "to_profile"
+# tagpost_tags
+# tagpost_posts
+# tagprofile_tags
+# tagprofile_profiles
+class Tagpost_tags(admin.TabularInline):
+    model = Relation
+    fk_name = "tagpost_post"
+    fields = ['tagpost_tag','tagpost_post']
+    def formfield_for_foreignkey(self, db_field, request, **kwargs):
+        kwargs['initial'] = None
+        return super(Tagpost_tags,self).formfield_for_foreignkey(
+            db_field, request, **kwargs
+        )
+    
+class Tagprofile_tags(admin.TabularInline):
+    model = Relation
+    fk_name = "tagprofile_profile"
+    fields = ['tagprofile_tag','tagprofile_profile']
+    def formfield_for_foreignkey(self, db_field, request, **kwargs):
+        kwargs['initial'] = None
+        return super(Tagprofile_tags,self).formfield_for_foreignkey(
+            db_field, request, **kwargs
+        )
+
 
 class CustomUserAdmin(UserAdmin):
     # UserAdmin.inlines = [ProfileInline]
@@ -58,7 +88,7 @@ class ProfileAdmin(admin.ModelAdmin):
     # Add it to the details view:
     exclude = ('password_digest',)
     readonly_fields = ('json','token',)  #user  
-    inlines = [PostInline,  From_tos]
+    inlines = [PostInline,From_tos,Tagprofile_tags]
 
     def user_link(self, obj):
         return mark_safe('<a href="{}">{}</a>'.format(
@@ -80,7 +110,7 @@ class PostAdmin(admin.ModelAdmin):
     # list_select_related = ('profile',)
     # Add it to the details view:
     # readonly_fields = ('user_link',)
-    inlines = [CommentInline]
+    inlines = [CommentInline,Tagpost_tags]
 
     def user_link(self, obj):
         return mark_safe('<a href="{}">{}</a>'.format(
@@ -181,6 +211,13 @@ class RelationAdmin(admin.ModelAdmin):
             str(obj.tagprofile_tag.id)+',  '+obj.tagprofile_tag.name
         ))
     tagprofile_tag_link.short_description = 'tagprofile_tag'
+
+    def get_queryset(self, request):
+        qs = super(RelationAdmin, self).get_queryset(request)
+        self.request = request
+        print('--------------',request.path)
+        return qs
+
 
 class TagAdmin(admin.ModelAdmin):
     list_display =  ('id','name')

@@ -131,14 +131,14 @@ class Relation(models.Model):
     created_at = models.DateTimeField(auto_now_add=True,null=True, blank=True)
     updated_at = models.DateTimeField(auto_now=True,null=True, blank=True)       
     #user friendship
-    from_profile = models.ForeignKey(Profile, on_delete=models.CASCADE, related_name="from_tos",  default=0)#以from_profile_id 为外键
-    to_profile = models.ForeignKey(Profile, on_delete=models.CASCADE, related_name="froms_to",  default=0)#以to_profile_id 为外键
+    from_profile = models.ForeignKey(Profile, on_delete=models.CASCADE, related_name="from_tos",  default=1)#以from_profile_id 为外键
+    to_profile = models.ForeignKey(Profile, on_delete=models.CASCADE, related_name="froms_to",  default=1)#以to_profile_id 为外键
     #tag-post relation
-    tagpost_post = models.ForeignKey(Post, on_delete=models.CASCADE, related_name="tagpost_tags", default=0)
-    tagpost_tag = models.ForeignKey(Tag, on_delete=models.CASCADE, related_name="tagpost_posts", default=0)
+    tagpost_post = models.ForeignKey(Post, on_delete=models.CASCADE, related_name="tagpost_tags", default=1)
+    tagpost_tag = models.ForeignKey(Tag, on_delete=models.CASCADE, related_name="tagpost_posts", default=1)
     #tag-profile relation
-    tagprofile_profile = models.ForeignKey(Profile, on_delete=models.CASCADE, related_name="tagprofile_tags", default=0)
-    tagprofile_tag = models.ForeignKey(Tag, on_delete=models.CASCADE, related_name="tagprofile_profiles", default=0)
+    tagprofile_profile = models.ForeignKey(Profile, on_delete=models.CASCADE, related_name="tagprofile_tags", default=1)
+    tagprofile_tag = models.ForeignKey(Tag, on_delete=models.CASCADE, related_name="tagprofile_profiles", default=1)
 
 
     class Meta:
