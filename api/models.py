@@ -95,6 +95,10 @@ class Post(models.Model):
 
     class Meta:
         db_table = 'posts'
+    
+    # @property
+    # def tagpost_tags():
+            
 
 
 class Photo(models.Model):
