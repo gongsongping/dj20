@@ -69,6 +69,18 @@ class Profile(models.Model):
     def delete(self):
         super(Profile, self).delete()
         self.user.delete()
+    
+    # from_tos_rs
+# to_froms_rs
+    @property
+    def from_tos(self):
+        # from_tos_ids = self.from_tos_rs.all().values_list('id', flat=True)
+        return [t.to_profile for t in self.from_tos_rs.all()]
+        
+    @property
+    def to_froms(self):
+        # to_froms_ids = self.to_froms_rs.all().values_list('id', flat=True)
+        return [f.from_profile for f in self.to_froms_rs.all()]
 
     def get_dict(self):
         return {'id': self.id,

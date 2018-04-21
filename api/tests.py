@@ -4,7 +4,7 @@ from django.utils import timezone
 from django.test import TestCase
 from django.contrib.auth.models import User
 from .models import *
-
+import random
 
 class ProfileModelTest(TestCase):
     # fixtures = ['all.json','api.relation']
@@ -32,3 +32,19 @@ class ProfileModelTest(TestCase):
         user = User.objects.get(pk=1)
         profile = Profile.objects.get(pk=1)
         self.assertEquals(profile.user_id, user.id)
+    
+    def test_from_to(self):
+        n1 = str(random.random())
+        n2 = str(random.random())
+        u1=User.objects.create(username=n1,password='gsp123456')
+        u2=User.objects.create(username=n2,password='gsp123456')
+        p1=u1.profile
+        p2=u2.profile
+        r=Relation.objects.create(from_profile=p1, to_profile=p2)
+        b1=p2 in p1.from_tos
+        b2=p1 in p2.to_froms
+        self.assertTrue(b1&b2)
+
+
+
+
