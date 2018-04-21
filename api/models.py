@@ -135,7 +135,7 @@ class Relation(models.Model):
     updated_at = models.DateTimeField(auto_now=True,null=True, blank=True)       
     #user friendship
     from_profile = models.ForeignKey(Profile, on_delete=models.CASCADE, related_name="from_tos_rs",  default=1)#以from_profile_id 为外键
-    to_profile = models.ForeignKey(Profile, on_delete=models.CASCADE, related_name="froms_to_rs",  default=1)#以to_profile_id 为外键
+    to_profile = models.ForeignKey(Profile, on_delete=models.CASCADE, related_name="to_froms_rs",  default=1)#以to_profile_id 为外键
     #tag-post relation
     tagpost_post = models.ForeignKey(Post, on_delete=models.CASCADE, related_name="tagpost_tags_rs", default=1)
     tagpost_tag = models.ForeignKey(Tag, on_delete=models.CASCADE, related_name="tagpost_posts_rs", default=1)
