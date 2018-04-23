@@ -4,6 +4,7 @@ from .models import *
 # from django.core.urlresolvers import reverse #before 2.0
 from django.urls import reverse
 from django.utils.safestring import mark_safe    
+from django.utils.html import format_html
 
 from django.contrib.auth.admin import UserAdmin
 from django.contrib.auth.models import User
@@ -79,7 +80,7 @@ class CustomUserAdmin(UserAdmin):
 
 
 class ProfileAdmin(admin.ModelAdmin):
-    list_display = ('id','avatar_img','name','email','token','created_at','updated_at','nationality','city','age','telenumber', 'user_link' )
+    list_display = ('id','avatar_img','name','email','created_at','updated_at','nationality','city','age','telenumber', 'user_link', 'tag_link' )
     list_display_links = ('id', 'email')
     search_fields = ('=id','name', '=age')
     # Add it to the details view:
@@ -98,9 +99,20 @@ class ProfileAdmin(admin.ModelAdmin):
         return mark_safe('<img width="50" height="50" src="{}" />'.format(obj.avatar))
     avatar_img.short_description = 'avatar'
 
+    def tag_link(self, obj):
+        # tags=[mark_safe('<a href="{}">{}</a>'.format(reverse("admin:api_tag_change", args=(t.pk,)), t.name )) for t in obj.tagpost_tags]
+        # return ''.join(tags)
+        # tags=''  ''必须处理
+        tags = format_html('')
+        for t in obj.tagprofile_tags:
+            # tags=tags+'#'+mark_safe('<a href="{}">{}</a>'.format(reverse("admin:api_tag_change", args=(t.pk,)), t.name ))
+            tags=tags+format_html('#')+format_html('<a href="{}">{}</a>',reverse("admin:api_tag_change", args=(t.pk,)), t.name,)
+        return tags    
+    tag_link.short_description = 'tags'
+
 
 class PostAdmin(admin.ModelAdmin):
-    list_display = ('id','content', 'url','user_link', 'comments')
+    list_display = ('id','content', 'url','user_link', 'comments','tag_link')
     list_display_links = ('id', 'content',)
     search_fields = ('=id','content','profile__email','profile__name')
     
@@ -120,6 +132,18 @@ class PostAdmin(admin.ModelAdmin):
         import json
         cmts = [c.content for c in obj.comments.all()]
         return json.dumps(cmts)
+
+    def tag_link(self, obj):
+        # tags=[mark_safe('<a href="{}">{}</a>'.format(reverse("admin:api_tag_change", args=(t.pk,)), t.name )) for t in obj.tagpost_tags]
+        # return ''.join(tags)
+        # tags=''  ''必须处理
+        tags = format_html('')
+        for t in obj.tagpost_tags:
+            # tags=tags+'#'+mark_safe('<a href="{}">{}</a>'.format(reverse("admin:api_tag_change", args=(t.pk,)), t.name ))
+            tags=tags+format_html('#')+format_html('<a href="{}">{}</a>',reverse("admin:api_tag_change", args=(t.pk,)), t.name,)
+        return tags    
+    tag_link.short_description = 'tags'
+    
 
 class PhotoAdmin(admin.ModelAdmin):
     list_display = ('id','url','image','user_link' )
@@ -217,9 +241,25 @@ class RelationAdmin(admin.ModelAdmin):
 
 
 class TagAdmin(admin.ModelAdmin):
-    list_display =  ('id','name')
+    list_display =  ('id','name','profile_link','post_link')
     # inlines=[]
+    def profile_link(self, obj):
+        # tags=''  ''必须处理
+        profiles = format_html('')
+        for t in obj.tagprofile_profiles:
+            # profiles=profiles+mark_safe('#')+mark_safe('<a href="{}">{}</a>'.format(reverse("admin:api_profile_change", args=(t.pk,)), t.name ))
+            profiles=profiles+format_html('#')+format_html('<a href="{}">{}</a>',reverse("admin:api_profile_change", args=(t.pk,)), t.name+'|'+t.email,)
+        return profiles    
+    profile_link.short_description = 'profiles'
 
+    def post_link(self, obj):
+        # tags=''  ''必须处理
+        posts = format_html('')
+        for t in obj.tagpost_posts:
+            # posts=posts+mark_safe('#')+mark_safe('<a href="{}">{}</a>'.format(reverse("admin:api_post_change", args=(t.pk,)), t.name ))
+            posts=posts+format_html('#')+format_html('<a href="{}">{}</a>',reverse("admin:api_post_change", args=(t.pk,)), t.id,)
+        return posts    
+    post_link.short_description = 'posts'
 
 admin.site.unregister(User)
 admin.site.register(User, CustomUserAdmin)
