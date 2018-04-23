@@ -82,6 +82,12 @@ class Profile(models.Model):
         # to_froms_ids = self.to_froms_rs.all().values_list('id', flat=True)
         return [f.from_profile for f in self.to_froms_rs.all()]
 
+    @property
+    def tagprofile_tags(self):
+        # tagprofile_tags_ids = self.tagprofile_tags_rs.all().values_list('id', flat=True)
+        return [t.tagprofile_tag for t in self.tagprofile_tags_rs.all()]       
+
+
     def get_dict(self):
         return {'id': self.id,
                 'is_superuser': self.user.is_superuser,
@@ -108,8 +114,10 @@ class Post(models.Model):
     class Meta:
         db_table = 'posts'
     
-    # @property
-    # def tagpost_tags():
+    @property
+    def tagpost_tags(self):
+        # tagpost_tags_ids = self.tagpost_tags_rs.all().values_list('id', flat=True)
+        return [t.tagpost_tag for t in self.tagpost_tags_rs.all()]
             
 
 
@@ -137,6 +145,16 @@ class Tag(models.Model):
     name = models.CharField(max_length=200, null=True, blank=True) 
     created_at = models.DateTimeField(auto_now_add=True,null=True, blank=True)
     updated_at = models.DateTimeField(auto_now=True,null=True, blank=True)       
+
+    @property
+    def tagprofile_profiles(self):
+        # tagprofile_profiles_ids = self.tagprofile_profiles_rs.all().values_list('id', flat=True)
+        return [t.tagprofile_profile for t in self.tagprofile_profiles_rs.all()] 
+
+    @property
+    def tagpost_posts(self):
+        # tagprofile_posts_ids = self.tagprofile_posts_rs.all().values_list('id', flat=True)
+        return [t.tagpost_post for t in self.tagpost_posts_rs.all()]     
 
     class Meta:
         db_table = 'tags'

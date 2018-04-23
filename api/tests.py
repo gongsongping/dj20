@@ -48,3 +48,23 @@ class ProfileModelTest(TestCase):
 
 
 
+class TagModelTest(TestCase):
+      def test_tagprofile_tags_tagpost_tags(self):
+        n1 = str(random.random())
+        n2 = str(random.random())
+        u=User.objects.create(username=n1,password='gsp123456')
+        pr=u.profile
+        po=Post.objects.create(content='tdt',profile=pr)
+        t1=Tag.objects.create(name='profile1')
+        t2=Tag.objects.create(name='post1')
+        tpr=Relation.objects.create(tagprofile_profile=pr, tagprofile_tag=t1)
+        tpo=Relation.objects.create(tagpost_post=po, tagpost_tag=t2)
+        b1=t1 in pr.tagprofile_tags
+        b2=t2 in po.tagpost_tags
+
+        b3=pr in t1.tagprofile_profiles
+        b4=po in t2.tagpost_posts
+        self.assertTrue(b1)
+        self.assertTrue(b2)
+        self.assertTrue(b3)
+        self.assertTrue(b4)
