@@ -115,7 +115,8 @@ class PostAdmin(admin.ModelAdmin):
     list_display = ('id','content', 'url','user_link', 'comments','tag_link')
     list_display_links = ('id', 'content',)
     search_fields = ('=id','content','profile__email','profile__name')
-    
+    list_max_show_all = 40
+    list_per_page = 20
     # list_select_related = ('profile',)
     # Add it to the details view:
     # readonly_fields = ('user_link',)
@@ -147,7 +148,11 @@ class PostAdmin(admin.ModelAdmin):
 
 class PhotoAdmin(admin.ModelAdmin):
     list_display = ('id','url','image','user_link' )
-    list_display_links = ('id', 'image')
+    list_display_links = ('id', 'image') 
+    # to control how many items can appear on a "Show all" admin change list page. The admin will display a "Show all" link on the change list only if 
+    # the total result count is less than or equal to this setting. By default, this is set to 200.
+    list_max_show_all = 40
+    list_per_page = 20
     # Add it to the details view:
     search_fields = ('=id','profile__email','profile__name')
     # inlines = [CommentInline]
@@ -160,7 +165,7 @@ class PhotoAdmin(admin.ModelAdmin):
     user_link.short_description = 'user'
 
     def image(self, obj):
-        return mark_safe('<img width="100" height="100" src="{}" />'.format(obj.url))+ mark_safe('<img width="100" height="100" src="{}" />'.format(obj.url))
+        return mark_safe('<img width="100" height="100" src="{}" />'.format(obj.url))
     image.short_description = 'image'
 
 class CommentAdmin(admin.ModelAdmin):
