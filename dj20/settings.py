@@ -31,6 +31,7 @@ ALLOWED_HOSTS = ['localhost', '127.0.0.1', '[::1]','gongsongping.com:8004','gong
 # Application definition
 
 INSTALLED_APPS = [
+    'rest_framework',
     'api.apps.ApiConfig',
     'django.contrib.admin',
     'django.contrib.auth',
