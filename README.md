@@ -1,4 +1,4 @@
-项目链接: [django admin](htt://gongsongping.com/admin 'admin')  
+项目链接: [django admin](http://gongsongping.com/admin 'admin')  
 试用登录username:test  登录pw:testuser
 # Django admin 部分定制
   有人说Django的admin是花瓶, 不堪一用. 我觉得既然Django团队保留它,自然有它的好处. 一个小团队人手不够的时候, 几行代码就能拥有一个后台管理系统, 何乐而不为. 
