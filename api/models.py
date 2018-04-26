@@ -88,20 +88,6 @@ class Profile(models.Model):
         return [t.tagprofile_tag for t in self.tagprofile_tags_rs.all()]       
 
 
-    def get_dict(self):
-        return {'id': self.id,
-                'is_superuser': self.user.is_superuser,
-                'first_name': self.user.first_name,
-                'last_name': self.user.last_name,
-                'email': self.user.email,
-                'is_active': self.user.is_active,
-                'is_staff': self.user.is_staff,
-                'username': self.user.username,
-                'date_joined': self.user.date_joined,
-                'last_login': self.user.last_login,
-                'token': self.token}
-
-
 class Post(models.Model):
     content = models.TextField(max_length=500)
     hidden = models.BooleanField(default=False)

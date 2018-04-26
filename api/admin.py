@@ -14,6 +14,7 @@ class CommentInline(admin.TabularInline):
 
 class PostInline(admin.TabularInline):
     model = Post
+    exclude = ('json',)
 
 class PhotoInline(admin.TabularInline):
     model = Photo
@@ -119,7 +120,8 @@ class PostAdmin(admin.ModelAdmin):
     list_per_page = 20
     # list_select_related = ('profile',)
     # Add it to the details view:
-    # readonly_fields = ('user_link',)
+    # exclude = ('json',)
+    readonly_fields = ('json',)
     inlines = [CommentInline,Tagpost_tags]
 
     def user_link(self, obj):
