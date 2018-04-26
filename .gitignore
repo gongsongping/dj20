@@ -7,3 +7,4 @@ __pycache__
 info
 tmp/
 fabfile.py
+.DS_Store
