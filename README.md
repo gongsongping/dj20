@@ -1,6 +1,7 @@
 项目链接: [django admin](http://gongsongping.com/admin 'admin')  
 试用登录username:test  登录pw:testuser   
-Python 3.6, Django 2.04  
+
+>Python 3.6, Django 2.04  
 pip install -r pip.txt  
 python manage.py migrate  
 python manage.py test api -k  
