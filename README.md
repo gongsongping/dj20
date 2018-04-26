@@ -1,4 +1,4 @@
-项目链接:[django admin](gongsongping.com/admin)  
+项目链接: [django admin](htt://gongsongping.com/admin 'admin')  
 试用登录username:test  登录pw:testuser
 # Django admin 部分定制
   有人说Django的admin是花瓶, 不堪一用. 我觉得既然Django团队保留它,自然有它的好处. 一个小团队人手不够的时候, 几行代码就能拥有一个后台管理系统, 何乐而不为. 
@@ -82,11 +82,11 @@ from django.contrib.auth.models import User
 
 admin.site.register(Profile, ProfileAdmin)
 ```
-1. 先继承admin.ModelAdmin , 然后定义一个`avatar_img`方法, 显示照片的html是`<img width="5" height="50" src="{}" />`, 因为是插入到已有的html里面, 所以要用`mark_save`做escape, 也可以用`format_html`, 效果一样的.
+1. 先继承admin.ModelAdmin , 然后定义一个`avatar_img`方法, 显示照片的html是`<img width="50" height="50" src="{}" />`, 因为是插入到已有的html里面, 所以要用`mark_save`做escape, 也可以用`format_html`, 效果一样的.
 2. 方法定义好以后, 要加入到list_display里面, 表示作为显示字段来显示.
 
  效果: 
-  ![avatar](static/avatar.png)  
+  ![avatar](static/avatar.png)   
 
 ______
 - ### _在添加, 更改页面加入子页面, 以在`Post`里添加`Tag`为例_  
@@ -153,4 +153,7 @@ admin.site.register(Post, PostAdmin)
 ```
 1. `Post`和`Tag`是多对多关系, 需要一个中间表`Relation`
 2. `Tagpost_tags`需要继承`admin.TabularInline`
-2. `inlines = [Tagpost_tags]`, 表示在添加页和修改页显示`Tag`
+2. `inlines = [Tagpost_tags]`, 表示在添加页和修改页显示`Tag`  
+
+ 效果: 
+  ![avatar](static/post_tag.png) 
