@@ -8,3 +8,5 @@ info
 tmp/
 fabfile.py
 .DS_Store
+.mypy_cache/
+.idea/
