@@ -25,7 +25,7 @@ SECRET_KEY = 'o!$^+bprzjvxbj(ww8lu+ce1_8tka6k-xq)l$-ustg(!)ws_1@'
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = ['localhost', '127.0.0.1', '[::1]','gongsongping.com:8004','gongsongping.com']
+ALLOWED_HOSTS = ['localhost', '127.0.0.1', '[::1]','gongsongping.com:8004','gongsongping.com','192.168.1.100']
 
 
 # Application definition
